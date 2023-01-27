@@ -100,7 +100,7 @@ jobs:
 
     - name: "🔧 Apply Windows Portability Patches"
       run: |
-        function b() { 
+        function b() {
           bak=$(find . -type f -name '*.bak')
           test -z "${bak}" && return
           src=${bak/.bak/}
@@ -114,20 +114,21 @@ jobs:
           rm -f "${bak}"
           echo "${patch}":
           cat "${patch}"
-        )
+        }
         cd nano
         ##########################
         ##                        ##
         ##     APPLY PATCHES      ##
         ##                        ##
         ##########################
-
+        cp -p ./src/definitions.h{,.bak}
         # 1. >realpath< function doesn't exist on Windows, which isn't fully POSIX compliant.
         echo " " >> ./src/definitions.h
         echo "#ifdef _WIN32" >> ./src/definitions.h
         echo "#define realpath(N,R) _fullpath((R),(N),0)" >> ./src/definitions.h
         echo "#endif" >> ./src/definitions.h
         echo "PATCH: realpath() workaround applied."
+        b
 
         # Fix homedir detection
         sed -i.bak 's|\"HOME\"|"USERPROFILE\"|g' ./src/utils.c
