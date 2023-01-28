@@ -115,11 +115,12 @@ jobs:
             ((n++))
           done
           echo Executing diff -u -w "${bak}" "${src}"
-          diff -u -w "${bak}" "${src}" >"${patch}"
-          rm -f "${bak}"
+          diff -u -w "${bak}" "${src}" >"${patch}" || true
+          rm -f "${bak}" || true
           echo "${patch}":
           cat "${patch}"
           echo "Leaving b()"
+          return 0
         }
         cd nano
         ##########################
