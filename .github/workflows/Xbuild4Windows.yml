@@ -101,19 +101,25 @@ jobs:
     - name: "🔧 Apply Windows Portability Patches"
       run: |
         function b() {
-          bak=$(find . -type f -name '*.bak')
+          echo "Entering b()"
+          bak=$(find . -type f -name '*.bak' | head -n 1)
+          printf "bak=%s\n" "${bak}"
           test -z "${bak}" && return
           src=${bak/.bak/}
+          printf "src=%s\n" "${src}"
           n=1
           while : ; do
             patch=${src}-${n}.patch
+            printf "patch=%s\n" "${patch}"
             test -f "${patch}" || break
             ((n++))
           done
+          echo Executing diff -u -w "${bak}" "${src}"
           diff -u -w "${bak}" "${src}" >"${patch}"
           rm -f "${bak}"
           echo "${patch}":
           cat "${patch}"
+          echo "Leaving b()"
         }
         cd nano
         ##########################
